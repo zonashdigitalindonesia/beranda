@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Zonash Digital Indonesia - Solusi Digital Terbaik</title>
+    <style>
+        /* Modern Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-primary: #f8fafc; /* Crisp, ultra-modern slate white */
+            --bg-secondary: #ffffff; /* pure white for cards and header */
+            --primary-brand: #03045e; /* Elegant dark blue matching Zonash logo */
+            --accent-blue: #0077b6; /* Professional royal blue */
+            --accent-cyan: #00b4d8; /* Bright energetic cyan */
+            --text-dark: #1e293b; /* Deep slate gray for ultimate readability */
+            --text-muted: #64748b; /* Soft gray for descriptions */
+            --border-color: #e2e8f0; /* Soft border line */
+            --shadow-sm: 0 2px 8px rgba(0, 119, 182, 0.04);
+            --shadow-md: 0 12px 30px rgba(0, 119, 182, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 119, 182, 0.12);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation Bar - Redesigned to Light & Elegant */
+        header {
+            background-color: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        /* Seamless Logo - No capsules needed since background is beautifully light! */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 46px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-text-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text {
+            font-size: 14pt;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--primary-brand);
+        }
+
+        .logo-subtext {
+            font-size: 7.5pt;
+            color: var(--accent-blue);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: -2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10pt;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Premium Buttons */
+        .btn-cta {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 10pt;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.25);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 119, 182, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: var(--primary-brand);
+            border: 2px solid var(--border-color);
+            padding: 10px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 10pt;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 100px 0;
+            position: relative;
+            background: radial-gradient(circle at 80% 20%, rgba(0, 180, 216, 0.06) 0%, transparent 50%);
+            overflow: hidden;
+        }
+
+        .hero-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content-col {
+            flex: 1.2;
+            min-width: 300px;
+        }
+
+        .hero-graphic-col {
+            flex: 0.8;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .badge {
+            background-color: rgba(0, 119, 182, 0.08);
+            color: var(--accent-blue);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 8.5pt;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: 38pt;
+            line-height: 1.2;
+            font-weight: 850;
+            margin-bottom: 24px;
+            color: var(--primary-brand);
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 12pt;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            max-width: 580px;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Clean Seamless Logo Display in Hero */
+        .hero-logo-wrapper {
+            background: var(--bg-secondary);
+            border-radius: 40px;
+            padding: 24px; /* Dikurangi agar logo bisa lebih besar mengisi ruang */
+            width: 100%;
+            max-width: 420px; /* Sedikit diperbesar kotaknya */
+            aspect-ratio: 1 / 1; /* Membuat kotak presisi 1:1 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: transform 0.4s ease;
+        }
+
+        .hero-logo-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-logo-display {
+            width: 85%; /* Diperbesar agar pas dan proporsional dengan kotak */
+            height: 85%;
+            object-fit: contain;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background-color: var(--bg-secondary);
+            padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stats-item {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .stats-item:last-child {
+            border-right: none;
+        }
+
+        @media (max-width: 768px) {
+            .stats-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 30px;
+            }
+            .stats-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+        }
+
+        .stats-number {
+            font-size: 34pt;
+            font-weight: 850;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .stats-label {
+            font-size: 9.5pt;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 120px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-title {
+            font-size: 28pt;
+            font-weight: 850;
+            margin-bottom: 20px;
+            color: var(--primary-brand);
+        }
+
+        .section-title span {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 11.5pt;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 119, 182, 0.2);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-card:hover::after {
+            opacity: 1;
+        }
+
+        .service-icon {
+            font-size: 34pt;
+            margin-bottom: 24px;
+        }
+
+        .service-title {
+            font-size: 15pt;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-brand);
+        }
+
+        .service-desc {
+            font-size: 10pt;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            flex-grow: 1;
+            line-height: 1.7;
+        }
+
+        .service-list {
+            list-style: none;
+            font-size: 9.5pt;
+            color: var(--text-dark);
+        }
+
+        .service-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .service-list li::before {
+            content: "✓";
+            color: var(--accent-blue);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Call to Action Section */
+        .cta-banner {
+            background: linear-gradient(135deg, var(--primary-brand) 0%, #010224 100%);
+            border-radius: 32px;
+            padding: 80px 40px;
+            text-align: center;
+            margin-bottom: 120px;
+            box-shadow: 0 30px 60px rgba(3, 4, 94, 0.15);
+            position: relative;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-banner h2 {
+            font-size: 30pt;
+            font-weight: 850;
+            margin-bottom: 20px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .cta-banner p {
+            font-size: 11.5pt;
+            color: #e2e8f0;
+            max-width: 650px;
+            margin: 0 auto 40px auto;
+            line-height: 1.8;
+        }
+
+        /* Footer - Redesigned to Clean Light Theme */
+        footer {
+            background-color: var(--bg-secondary);
+            padding: 80px 0 40px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-logo-container {
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        .footer-col p {
+            color: var(--text-muted);
+            font-size: 10pt;
+            line-height: 1.7;
+        }
+
+        .footer-col h4 {
+            font-size: 11pt;
+            color: var(--primary-brand);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 14px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10pt;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .contact-info-list {
+            list-style: none;
+            font-size: 10pt;
+            color: var(--text-muted);
+        }
+
+        .contact-info-list li {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .contact-info-list strong {
+            color: var(--text-dark);
+        }
+
+        .copyright-bar {
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 9pt;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive Navbar */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 24px 0;
+                gap: 20px;
+            }
+            .nav-links {
+                gap: 24px;
+            }
+            .hero-section {
+                padding: 60px 0;
+            }
+            .hero-title {
+                font-size: 28pt;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container navbar">
+            <a href="#" class="logo-area">
+                <img src="Logo ZDI.png" alt="Zonash Digital Indonesia Logo" class="logo-img">
+                <div class="logo-text-group">
+                    <span class="logo-text">PT ZONASH</span>
+                    <span class="logo-subtext">DIGITAL INDONESIA</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#layanan">Layanan</a></li>
+                <li><a href="https://zonashdigitalindonesia.github.io/payment/" target="_blank">Payment</a></li>
+                <li><a href="#kontak">Hubungi Kami</a></li>
+            </ul>
+            <div>
+                <a href="https://wa.me/6281548990582" target="_blank" class="btn-cta">Hubungi WA</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-layout">
+                <div class="hero-content-col">
+                    <span class="badge">PROFIL BERANDA RESMI</span>
+                    <h1 class="hero-title">Solusi Digital Inovatif, <span>Hasil Maksimal</span></h1>
+                    <p class="hero-description">
+                        PT Zonash Digital Indonesia membantu UMKM, perusahaan, sekolah, koperasi, hingga instansi pemerintah membangun ekosistem teknologi digital yang efisien, responsif, dan berkelanjutan.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="https://wa.me/6281548990582" class="btn-cta" target="_blank">Konsultasi Gratis</a>
+                        <a href="#layanan" class="btn-secondary">Lihat Layanan</a>
+                    </div>
+                </div>
+                <div class="hero-content-col hero-graphic-col">
+                    <!-- Clean, borderless premium container -->
+                    <div class="hero-logo-wrapper">
+                        <img src="Logo ZDI.png" alt="Zonash Logo" class="hero-logo-display">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stats-item">
+                    <div class="stats-number">50+</div>
+                    <div class="stats-label">Proyek Digital</div>
+                </div>
+                <div class="stats-item">
+                    <div class="stats-number">100%</div>
+                    <div class="stats-label">Komitmen</div>
+                </div>
+                <div class="stats-item">
+                    <div class="stats-number">98%</div>
+                    <div class="stats-label">Kepuasan Klien</div>
+                </div>
+                <div class="stats-item">
+                    <div class="stats-number">Nasional</div>
+                    <div class="stats-label">Wilayah Layanan</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="layanan" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Layanan Unggulan <span>Kami</span></h2>
+                <p class="section-subtitle">Solusi digital end-to-end dengan kualitas terbaik dan hasil yang terukur.</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Card 1 -->
+                <div class="service-card">
+                    <div>
+                        <div class="service-icon">🌐</div>
+                        <h3 class="service-title">Website Development</h3>
+                        <p class="service-desc">Kami membangun website profesional, responsif, dan ramah SEO untuk meningkatkan kredibilitas bisnis Anda.</p>
+                    </div>
+                    <ul class="service-list">
+                        <li>Company Profile</li>
+                        <li>Toko Online / E-Commerce</li>
+                        <li>Landing Page</li>
+                    </ul>
+                </div>
+                <!-- Card 2 -->
+                <div class="service-card">
+                    <div>
+                        <div class="service-icon">📱</div>
+                        <h3 class="service-title">Mobile & Web Apps</h3>
+                        <p class="service-desc">Solusi aplikasi berbasis web maupun mobile (Android) untuk mendukung kelancaran operasional bisnis Anda.</p>
+                    </div>
+                    <ul class="service-list">
+                        <li>Aplikasi Web & Mobile</li>
+                        <li>Sistem Informasi</li>
+                        <li>Aplikasi Kustom</li>
+                    </ul>
+                </div>
+                <!-- Card 3 -->
+                <div class="service-card">
+                    <div>
+                        <div class="service-icon">🎨</div>
+                        <h3 class="service-title">Branding & Design</h3>
+                        <p class="service-desc">Membantu membangun identitas brand yang kuat, modern, menarik, dan berkesan tinggi di mata pelanggan.</p>
+                    </div>
+                    <ul class="service-list">
+                        <li>Desain Logo & Identity</li>
+                        <li>Desain Grafis Konten</li>
+                        <li>UI/UX Design</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section id="kontak" class="container">
+        <div class="cta-banner">
+            <h2>Mulai Transformasi Digital Bisnis Anda Sekarang</h2>
+            <p>Konsultasikan kebutuhan teknologi Anda dengan tim ahli dari PT Zonash Digital Indonesia secara gratis.</p>
+            <a href="https://wa.me/6281548990582" class="btn-cta" target="_blank">Hubungi WhatsApp Kami</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo-container">
+                        <div class="logo-area">
+                            <img src="Logo ZDI.png" alt="Zonash Logo" class="logo-img">
+                            <div class="logo-text-group">
+                                <span class="logo-text">PT ZONASH</span>
+                                <span class="logo-subtext">DIGITAL INDONESIA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p>
+                        Penyedia solusi teknologi informasi dan layanan digital profesional terintegrasi yang berdedikasi memberikan hasil maksimal untuk kesuksesan bisnis Anda.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigasi</h4>
+                    <ul class="footer-links">
+                        <li><a href="#layanan">Layanan Kami</a></li>
+                        <li><a href="https://zonashdigitalindonesia.github.io/payment/" target="_blank">Payment</a></li>
+                        <li><a href="#kontak">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Kontak Kami</h4>
+                    <ul class="contact-info-list">
+                        <li><strong>Telepon/WA:</strong> 0815 4899 0582</li>
+                        <li><strong>Email:</strong> zonashdigitalindonesia@gmail.com</li>
+                        <li><strong>Alamat:</strong> Cilacap, Jawa Tengah, Indonesia</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright-bar">
+                &copy; 2026 PT Zonash Digital Indonesia. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
