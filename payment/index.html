@@ -169,7 +169,6 @@
     <div class="container">
         <div class="header">
             <h1>Zonash Digital Indonesia</h1>
-            <p>Halaman Pembayaran Resmi</p>
         </div>
         <div class="content">
             <!-- METODE QRIS -->
@@ -181,65 +180,7 @@
                 </div>
             </div>
 
-            <!-- METODE BANK BCA -->
-            <div class="payment-method">
-                <div class="method-title">Transfer Bank BCA</div>
-                <div class="bank-details">
-                    <div><strong>No. Rekening:</strong></div>
-                    <div class="bank-row">
-                        <span id="rekBca">4220380829</span>
-                        <button class="copy-btn" onclick="copyText('rekBca')">Salin</button>
-                    </div>
-                    <div style="margin-top: 8px;"><strong>Atas Nama:</strong> CARLA ELANNESTYA PURWANTO</div>
-                </div>
-            </div>
-
-            <!-- METODE BANK BNI -->
-            <div class="payment-method">
-                <div class="method-title">Transfer Bank BNI</div>
-                <div class="bank-details">
-                    <div><strong>No. Rekening:</strong></div>
-                    <div class="bank-row">
-                        <span id="rekBni">1992216457</span>
-                        <button class="copy-btn" onclick="copyText('rekBni')">Salin</button>
-                    </div>
-                    <div style="margin-top: 8px;"><strong>Atas Nama:</strong> CARLA ELANNESTYA PURWANTO</div>
-                </div>
-            </div>
-
-            <!-- METODE E-WALLET DANA -->
-            <div class="payment-method">
-                <div class="method-title">E-Wallet DANA</div>
-                <div class="bank-details">
-                    <div><strong>No. DANA:</strong></div>
-                    <div class="bank-row">
-                        <span id="noDana">081548990582</span>
-                        <button class="copy-btn" onclick="copyText('noDana')">Salin</button>
-                    </div>
-                    <div style="margin-top: 8px;"><strong>Atas Nama:</strong> CARLA ELANNESTYA PURWANTO</div>
-                </div>
-            </div>
-
-            <!-- INSTRUKSI -->
-            <div class="instructions">
-                <h3>Cara Pembayaran:</h3>
-                <ol>
-                    <li>Pilih metode pembayaran (QRIS, Bank, atau DANA).</li>
-                    <li>Lakukan pembayaran sesuai nominal transaksi.</li>
-                    <li>Simpan/Screenshot bukti bayar.</li>
-                    <li>Klik tombol di bawah untuk konfirmasi.</li>
-                </ol>
-            </div>
-
-            <!-- TOMBOL WA -->
-            <a href="https://wa.me/6281548990582?text=Halo%20Zonash%20Digital%20Indonesia,%20saya%20ingin%20mengirimkan%20bukti%20pembayaran" class="whatsapp-btn" target="_blank">
-                Kirim Bukti via WhatsApp
-            </a>
-            <div class="footer">
-                🔐 Pembayaran Aman & Terverifikasi
-            </div>
-        </div>
-    </div>
+           
     <script>
         function copyText(id) {
             const textToCopy = document.getElementById(id).innerText;
