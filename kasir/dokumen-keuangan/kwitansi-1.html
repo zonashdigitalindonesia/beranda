@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Kwitansi - 1 Halaman</title>
+    <style>
+        :root {
+            --primary-color: #0b3c5d;
+            --secondary-color: #328cc1;
+            --accent-color: #d9b310;
+            --bg-color: #f4f7f6;
+            --text-color: #1d2731;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* App Layout */
+        .sidebar {
+            width: 380px;
+            background: #ffffff;
+            padding: 25px;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .main-content {
+            margin-left: 380px;
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Typography & Form Elements */
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .section-divider {
+            margin: 25px 0 15px 0;
+            padding-top: 15px;
+            border-top: 1px dashed #ccd1d9;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccd1d9;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(50, 140, 193, 0.15);
+        }
+
+        /* Custom File Input Styling */
+        input[type="file"] {
+            padding: 8px 10px;
+            background: #fafbfd;
+            cursor: pointer;
+        }
+
+        .btn-print {
+            width: 100%;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-print:hover {
+            background-color: #27ae60;
+        }
+
+        /* Kwitansi Template styling (A5 landscape proportion) */
+        .kwitansi-container {
+            background: #ffffff;
+            width: 210mm;
+            max-width: 100%;
+            height: 148mm;
+            padding: 15mm;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border-left: 8px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Corner accents for premium look */
+        .kwitansi-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, transparent 50%, rgba(50, 140, 193, 0.1) 50%);
+            pointer-events: none;
+        }
+
+        .kwitansi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #efefef;
+            padding-bottom: 12px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 65%;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+        }
+
+        .company-info {
+            word-break: break-word;
+        }
+
+        .company-info p {
+            font-size: 0.75rem;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .kwitansi-title {
+            text-align: right;
+        }
+
+        .kwitansi-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .kwitansi-no {
+            font-size: 0.85rem;
+            color: #555;
+            font-family: monospace;
+        }
+
+        /* Body Rows */
+        .kwitansi-body {
+            margin-top: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .row-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .row-label {
+            width: 160px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-top: 2px;
+        }
+
+        .row-value {
+            flex-grow: 1;
+            font-size: 0.95rem;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 4px;
+            min-height: 24px;
+            color: #111;
+        }
+
+        .row-value.terbilang {
+            font-style: italic;
+            font-weight: 600;
+            color: #555;
+            background-color: #fafbfd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #eef2f5;
+        }
+
+        /* Footer Info */
+        .kwitansi-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
+        }
+
+        .amount-box {
+            background: linear-gradient(135deg, var(--primary-color), #145374);
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(11, 60, 93, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .sign-area {
+            text-align: center;
+            width: 220px;
+            font-size: 0.85rem;
+        }
+
+        .sign-date {
+            margin-bottom: 55px;
+            color: #555;
+        }
+
+        .sign-name {
+            font-weight: 700;
+            color: #111;
+            border-bottom: 1px solid #111;
+            padding-bottom: 2px;
+            display: inline-block;
+        }
+
+        .sign-dept {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            @page {
+                size: A5 landscape;
+                margin: 0;
+            }
+            body {
+                background-color: #ffffff;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .sidebar {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                width: 100% !important;
+            }
+            .kwitansi-container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                border-left: 8px solid var(--primary-color) !important;
+                width: 210mm !important;
+                height: 148mm !important;
+                padding: 15mm !important;
+                box-sizing: border-box !important;
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Form -->
+    <div class="sidebar">
+        <h2>Generator Kwitansi</h2>
+        
+        <!-- UPLOAD LOGO -->
+        <div class="section-divider">Logo Perusahaan</div>
+        <div class="form-group">
+            <label for="input-logo">Upload File Logo (.png, .jpg)</label>
+            <input type="file" id="input-logo" accept="image/*">
+            <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Disarankan background transparan (PNG).</p>
+        </div>
+        
+        <!-- DATA PENERBIT (PERUSAHAAN) -->
+        <div class="section-divider">Data Perusahaan (Penerbit)</div>
+        
+        <div class="form-group">
+            <label for="input-comp-name">Nama Perusahaan</label>
+            <input type="text" id="input-comp-name" value="PT Zonash Digital Indonesia">
+        </div>
+
+        <div class="form-group">
+            <label for="input-comp-address">Alamat Perusahaan</label>
+            <textarea id="input-comp-address" rows="3">Plaza Kuningan, Menara Selatan, Lantai 11, Jl. H. R. Rasuna Said, Karet Kuningan, Setiabudi, Jakarta Selatan</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="input-comp-email">Email</label>
+            <input type="email" id="input-comp-email" value="finance@zonash.co.id">
+        </div>
+
+        <div class="form-group">
+            <label for="input-comp-wa">No. WhatsApp</label>
+            <input type="text" id="input-comp-wa" value="+62 812-3456-7890">
+        </div>
+
+        <!-- DETAIL KWITANSI -->
+        <div class="section-divider">Detail Transaksi</div>
+
+        <div class="form-group">
+            <label for="input-no">No. Kwitansi</label>
+            <input type="text" id="input-no" value="KW/2026/07/045">
+        </div>
+
+        <div class="form-group">
+            <label for="input-pembayar">Telah Diterima Dari</label>
+            <input type="text" id="input-pembayar" placeholder="Contoh: PT Sukses Mandiri" value="CV Mandiri Jaya Sentosa">
+        </div>
+
+        <div class="form-group">
+            <label for="input-jumlah">Jumlah Uang (Rp)</label>
+            <input type="number" id="input-jumlah" placeholder="Contoh: 1500000" value="8450000">
+        </div>
+
+        <div class="form-group">
+            <label for="input-untuk">Untuk Pembayaran</label>
+            <textarea id="input-untuk" rows="3" placeholder="Deskripsi pembayaran...">Pelunasan (Tahap II) Jasa Pembuatan Website Company Profile dan Setup Server Cloud PT Zonash Digital Indonesia</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="input-kota">Kota Penerbitan</label>
+            <input type="text" id="input-kota" value="Jakarta">
+        </div>
+
+        <div class="form-group">
+            <label for="input-tanggal">Tanggal</label>
+            <input type="date" id="input-tanggal" value="2026-07-17">
+        </div>
+
+        <div class="form-group">
+            <label for="input-penerima">Nama Penerima / TTD</label>
+            <input type="text" id="input-penerima" value="CARLA ELANNESTYA PURWANTO">
+        </div>
+
+        <div class="form-group">
+            <label for="input-jabatan">Jabatan</label>
+            <input type="text" id="input-jabatan" value="Finance Department">
+        </div>
+
+        <button class="btn-print" onclick="window.print()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.615 0-1.101-.486-1.12-1.1L5.89 18m12 0H6M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Cetak PDF / Kwitansi
+        </button>
+    </div>
+
+    <!-- Main Live Preview -->
+    <div class="main-content">
+        
+        <!-- KWITANSI CONTAINER (SINGLE PAGE) -->
+        <div class="kwitansi-container" id="kwitansi-single">
+            
+            <!-- Header -->
+            <div class="kwitansi-header">
+                <div class="logo-area">
+                    <img src="logo.png" class="logo-img val-logo" alt="Logo">
+                    <div class="company-info">
+                        <p style="font-weight: 700; color: var(--primary-color);" class="val-comp-name">PT Zonash Digital Indonesia</p>
+                        <p class="val-comp-address">Plaza Kuningan, Menara Selatan, Lantai 11, Jl. H. R. Rasuna Said, Karet Kuningan, Setiabudi, Jakarta Selatan</p>
+                        <p>Email: <span class="val-comp-email">finance@zonash.co.id</span> | WA: <span class="val-comp-wa">+62 812-3456-7890</span></p>
+                    </div>
+                </div>
+                <div class="kwitansi-title">
+                    <h1>KWITANSI</h1>
+                    <div class="kwitansi-no val-no">KW/2026/07/045</div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="kwitansi-body">
+                <div class="row-item">
+                    <div class="row-label">Telah Diterima Dari</div>
+                    <div class="row-value val-pembayar">CV Mandiri Jaya Sentosa</div>
+                </div>
+                
+                <div class="row-item">
+                    <div class="row-label">Uang Sejumlah</div>
+                    <div class="row-value terbilang val-terbilang">Delapan Juta Empat Ratus Lima Puluh Ribu Rupiah</div>
+                </div>
+
+                <div class="row-item">
+                    <div class="row-label">Untuk Pembayaran</div>
+                    <div class="row-value val-untuk" style="line-height: 1.4;">Pelunasan (Tahap II) Jasa Pembuatan Website Company Profile dan Setup Server Cloud PT Zonash Digital Indonesia</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="kwitansi-footer">
+                <div class="amount-box val-jumlah">
+                    Rp 8.450.000,-
+                </div>
+
+                <div class="sign-area">
+                    <div class="sign-date val-tanggal">Jakarta, 17 Juli 2026</div>
+                    <div class="sign-name val-penerima">CARLA ELANNESTYA PURWANTO</div>
+                    <div class="sign-dept val-jabatan">Finance Department</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Live Preview Script & Terbilang Converter -->
+    <script>
+        function konversiTerbilang(nilai) {
+            const bilangan = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+            let temp = "";
+            
+            if (nilai < 12) {
+                temp = " " + bilangan[nilai];
+            } else if (nilai < 20) {
+                temp = konversiTerbilang(nilai - 10) + " Belas";
+            } else if (nilai < 100) {
+                temp = konversiTerbilang(Math.floor(nilai / 10)) + " Puluh" + konversiTerbilang(nilai % 10);
+            } else if (nilai < 200) {
+                temp = " Seratus" + konversiTerbilang(nilai - 100);
+            } else if (nilai < 1000) {
+                temp = konversiTerbilang(Math.floor(nilai / 100)) + " Ratus" + konversiTerbilang(nilai % 100);
+            } else if (nilai < 2000) {
+                temp = " Seribu" + konversiTerbilang(nilai - 1000);
+            } else if (nilai < 1000000) {
+                temp = konversiTerbilang(Math.floor(nilai / 1000)) + " Ribu" + konversiTerbilang(nilai % 1000);
+            } else if (nilai < 1000000000) {
+                temp = konversiTerbilang(Math.floor(nilai / 1000000)) + " Juta" + konversiTerbilang(nilai % 1000000);
+            } else if (nilai < 1000000000000) {
+                temp = konversiTerbilang(Math.floor(nilai / 1000000000)) + " Milyar" + konversiTerbilang(nilai % 1000000000);
+            }
+            return temp;
+        }
+
+        function formatTerbilang(nominal) {
+            if (isNaN(nominal) || nominal === "") return "Nol Rupiah";
+            let hasil = konversiTerbilang(parseInt(nominal)).trim();
+            return hasil + " Rupiah";
+        }
+
+        function formatRupiah(angka) {
+            var number_string = angka.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+            if (ribuan) {
+                var separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+            return 'Rp ' + rupiah + ',-';
+        }
+
+        function formatTanggalIndonesia(dateString) {
+            if(!dateString) return "";
+            const bulanIndo = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const dateObj = new Date(dateString);
+            const hari = dateObj.getDate();
+            const bulan = bulanIndo[dateObj.getMonth()];
+            const tahun = dateObj.getFullYear();
+            return `${hari} ${bulan} ${tahun}`;
+        }
+
+        // DOM Inputs - Perusahaan & Logo
+        const inputLogo = document.getElementById('input-logo');
+        const inputCompName = document.getElementById('input-comp-name');
+        const inputCompAddress = document.getElementById('input-comp-address');
+        const inputCompEmail = document.getElementById('input-comp-email');
+        const inputCompWa = document.getElementById('input-comp-wa');
+
+        // DOM Inputs - Kwitansi
+        const inputNo = document.getElementById('input-no');
+        const inputPembayar = document.getElementById('input-pembayar');
+        const inputJumlah = document.getElementById('input-jumlah');
+        const inputUntuk = document.getElementById('input-untuk');
+        const inputKota = document.getElementById('input-kota');
+        const inputTanggal = document.getElementById('input-tanggal');
+        const inputPenerima = document.getElementById('input-penerima');
+        const inputJabatan = document.getElementById('input-jabatan');
+
+        // Handler untuk Upload Logo
+        inputLogo.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.querySelectorAll('.val-logo').forEach(img => {
+                        img.src = event.target.result;
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Live Preview Update Function
+        function updatePreview() {
+            const nominal = inputJumlah.value;
+            const rupiahFormatted = formatRupiah(nominal);
+            const terbilangFormatted = formatTerbilang(nominal);
+            const tglFormatted = formatTanggalIndonesia(inputTanggal.value);
+            const tanggalLengkap = (inputKota.value ? inputKota.value + ', ' : '') + tglFormatted;
+
+            // Sync Data Perusahaan
+            document.querySelectorAll('.val-comp-name').forEach(el => el.textContent = inputCompName.value);
+            document.querySelectorAll('.val-comp-address').forEach(el => el.textContent = inputCompAddress.value);
+            document.querySelectorAll('.val-comp-email').forEach(el => el.textContent = inputCompEmail.value);
+            document.querySelectorAll('.val-comp-wa').forEach(el => el.textContent = inputCompWa.value);
+
+            // Sync Data Kwitansi
+            document.querySelectorAll('.val-no').forEach(el => el.textContent = inputNo.value);
+            document.querySelectorAll('.val-pembayar').forEach(el => el.textContent = inputPembayar.value);
+            document.querySelectorAll('.val-untuk').forEach(el => el.textContent = inputUntuk.value);
+            document.querySelectorAll('.val-jumlah').forEach(el => el.textContent = rupiahFormatted);
+            document.querySelectorAll('.val-terbilang').forEach(el => el.textContent = terbilangFormatted);
+            document.querySelectorAll('.val-tanggal').forEach(el => el.textContent = tanggalLengkap);
+            document.querySelectorAll('.val-penerima').forEach(el => el.textContent = inputPenerima.value);
+            document.querySelectorAll('.val-jabatan').forEach(el => el.textContent = inputJabatan.value);
+        }
+
+        // Attach Event Listeners
+        const allInputs = [
+            inputCompName, inputCompAddress, inputCompEmail, inputCompWa,
+            inputNo, inputPembayar, inputJumlah, inputUntuk, inputKota, inputTanggal, inputPenerima, inputJabatan
+        ];
+
+        allInputs.forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+
+        // Run on initial load
+        updatePreview();
+    </script>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Invoice - Profesional</title>
+    <style>
+        :root {
+            --primary-color: #0b3c5d;
+            --secondary-color: #328cc1;
+            --accent-color: #d9b310;
+            --bg-color: #f4f7f6;
+            --text-color: #1d2731;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* App Layout */
+        .sidebar {
+            width: 400px;
+            background: #ffffff;
+            padding: 25px;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .main-content {
+            margin-left: 400px;
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Form Elements */
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .section-divider {
+            margin: 25px 0 15px 0;
+            padding-top: 15px;
+            border-top: 1px dashed #ccd1d9;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccd1d9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(50, 140, 193, 0.15);
+        }
+
+        input[type="file"] {
+            padding: 6px 10px;
+            background: #fafbfd;
+            cursor: pointer;
+        }
+
+        /* Item List Manager in Sidebar */
+        .item-entry {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-add {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #2374a3;
+        }
+
+        .btn-print {
+            width: 100%;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-print:hover {
+            background-color: #27ae60;
+        }
+
+        /* Invoice Preview Area (A4 Portrait) */
+        .invoice-container {
+            background: #ffffff;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Style */
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 25px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 60%;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: auto;
+            max-width: 150px;
+            object-fit: contain;
+        }
+
+        .company-details p {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .invoice-title-section {
+            text-align: right;
+        }
+
+        .invoice-title-section h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .invoice-meta {
+            font-size: 0.85rem;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Addresses Section */
+        .invoice-addresses {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 40px;
+        }
+
+        .address-box {
+            flex: 1;
+        }
+
+        .address-box h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .address-box p {
+            font-size: 0.85rem;
+            color: #444;
+            line-height: 1.4;
+        }
+
+        /* Table Style */
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 35px;
+            flex-grow: 1;
+        }
+
+        .invoice-table th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .invoice-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: #333;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        /* Summary & Payment Section */
+        .invoice-summary-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .payment-info-wrapper {
+            width: 55%;
+            display: flex;
+            gap: 15px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .payment-text {
+            flex: 1;
+            font-size: 0.8rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .payment-text h4 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .qris-preview-box {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            padding: 4px;
+            border-radius: 4px;
+            display: none; /* Default tersembunyi */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qris-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .summary-table {
+            width: 40%;
+            font-size: 0.85rem;
+        }
+
+        .summary-table tr td {
+            padding: 6px 0;
+        }
+
+        .summary-table tr.grand-total td {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-top: 2px solid var(--primary-color);
+            padding-top: 10px;
+        }
+
+        /* Footer / Sign Area */
+        .invoice-footer {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .thanks-message {
+            font-style: italic;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .sign-area {
+            text-align: center;
+            width: 200px;
+            font-size: 0.85rem;
+        }
+
+        .sign-title {
+            margin-bottom: 60px;
+            color: #555;
+        }
+
+        .sign-name {
+            font-weight: 700;
+            border-bottom: 1px solid #333;
+            padding-bottom: 2px;
+            display: inline-block;
+        }
+
+        /* Print Override */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            body {
+                background-color: #ffffff;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .sidebar {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                width: 100% !important;
+            }
+            .invoice-container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                width: 210mm !important;
+                min-height: 297mm !important;
+                padding: 20mm !important;
+                box-sizing: border-box !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Input -->
+    <div class="sidebar">
+        <h2>Generator Invoice</h2>
+
+        <!-- UPLOAD LOGO -->
+        <div class="section-divider">Logo Perusahaan</div>
+        <div class="form-group">
+            <label for="input-logo">Upload File Logo (.png, .jpg)</label>
+            <input type="file" id="input-logo" accept="image/*">
+        </div>
+
+        <!-- PERUSAHAAN (PENGIRIM) -->
+        <div class="section-divider">Pengirim (Perusahaan Anda)</div>
+        <div class="form-group">
+            <label for="input-comp-name">Nama Perusahaan</label>
+            <input type="text" id="input-comp-name" value="PT Zonash Digital Indonesia">
+        </div>
+        <div class="form-group">
+            <label for="input-comp-address">Alamat Pengirim</label>
+            <textarea id="input-comp-address" rows="2">Karangtengah, Kec. Sampang, Kab. Cilacap</textarea>
+        </div>
+        <div class="form-group">
+            <label for="input-comp-contact">Kontak (Telp/WA/Email)</label>
+            <input type="text" id="input-comp-contact" value="zonashdigitalindonesia@gmail.com | 081393594739">
+        </div>
+
+        <!-- METADATA INVOICE -->
+        <div class="section-divider">Detail Invoice</div>
+        <div class="form-group">
+            <label for="input-inv-no">Nomor Invoice</label>
+            <input type="text" id="input-inv-no" value="INV/2026/07/1029">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="input-inv-date">Tanggal Terbit</label>
+                <input type="date" id="input-inv-date" value="2026-07-17">
+            </div>
+            <div class="form-group">
+                <label for="input-inv-due">Jatuh Tempo</label>
+                <input type="date" id="input-inv-due" value="2026-07-31">
+            </div>
+        </div>
+
+        <!-- PELANGGAN (PENERIMA) -->
+        <div class="section-divider">Tujuan (Pelanggan)</div>
+        <div class="form-group">
+            <label for="input-client-name">Nama Pelanggan/Perusahaan</label>
+            <input type="text" id="input-client-name" value="CV Mandiri Jaya Sentosa">
+        </div>
+        <div class="form-group">
+            <label for="input-client-address">Alamat Pelanggan</label>
+            <textarea id="input-client-address" rows="2">Jl. Ahmad Yani No. 45, Coblong, Kota Bandung, Jawa Barat</textarea>
+        </div>
+
+        <!-- DAFTAR ITEM BARANG / JASA -->
+        <div class="section-divider">Item / Layanan</div>
+        <div id="sidebar-items-container">
+            <!-- Item akan ditambahkan di sini secara dinamis melalui JavaScript -->
+        </div>
+        <button class="btn-add" onclick="addNewItemRow()">+ Tambah Item</button>
+
+        <!-- INFORMASI PEMBAYARAN & QRIS -->
+        <div class="section-divider">Informasi Pembayaran & Pajak</div>
+        <div class="form-group">
+            <label for="input-tax-rate">Pajak (PPN %)</label>
+            <input type="number" id="input-tax-rate" value="11" placeholder="0">
+        </div>
+        <div class="form-group">
+            <label for="input-payment-info">Instruksi Pembayaran (Manual)</label>
+            <textarea id="input-payment-info" rows="3">Transfer Bank:
+Bank BCA - No Rek: 4220380829
+a.n Carla Elannestya Purwanto</textarea>
+        </div>
+        <div class="form-group">
+            <label for="input-qris">Upload Barcode QRIS (.png, .jpg)</label>
+            <input type="file" id="input-qris" accept="image/*">
+            <p style="font-size: 0.75rem; color: #777; margin-top: 4px;">Kosongkan jika tidak memakai QRIS.</p>
+        </div>
+
+        <!-- TANDA TANGAN -->
+        <div class="section-divider">Tanda Tangan</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="input-sign-name">Nama Penandatangan</label>
+                <input type="text" id="input-sign-name" value="Carla Elannestya P.">
+            </div>
+            <div class="form-group">
+                <label for="input-sign-role">Jabatan</label>
+                <input type="text" id="input-sign-role" value="Finance">
+            </div>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">
+            Cetak PDF / Invoice
+        </button>
+    </div>
+
+    <!-- Live Preview (A4 Portrait) -->
+    <div class="main-content">
+        
+        <div class="invoice-container">
+            <div>
+                <!-- Header -->
+                <div class="invoice-header">
+                    <div class="logo-section">
+                        <img src="logo.png" class="logo-img val-logo" alt="Logo Perusahaan">
+                        <div class="company-details">
+                            <p style="font-weight: 700; font-size: 1rem; color: var(--primary-color);" class="val-comp-name">PT Zonash Digital Indonesia</p>
+                            <p class="val-comp-address" style="white-space: pre-line;">Plaza Kuningan, Menara Selatan, Lantai 11, Jl. H. R. Rasuna Said, Jakarta Selatan</p>
+                            <p class="val-comp-contact">finance@zonash.co.id | +62 812-3456-7890</p>
+                        </div>
+                    </div>
+                    <div class="invoice-title-section">
+                        <h1>INVOICE</h1>
+                        <div class="invoice-meta">
+                            <strong>No:</strong> <span class="val-inv-no">INV/2026/07/1029</span><br>
+                            <strong>Tanggal:</strong> <span class="val-inv-date">17 Juli 2026</span><br>
+                            <strong>Jatuh Tempo:</strong> <span class="val-inv-due">31 Juli 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses -->
+                <div class="invoice-addresses">
+                    <div class="address-box">
+                        <h3>Ditagihkan Kepada:</h3>
+                        <strong style="font-size: 0.95rem;" class="val-client-name">CV Mandiri Jaya Sentosa</strong>
+                        <p class="val-client-address" style="white-space: pre-line; margin-top: 5px;">Jl. Ahmad Yani No. 45, Coblong, Kota Bandung, Jawa Barat</p>
+                    </div>
+                </div>
+
+                <!-- Invoice Table -->
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Deskripsi Layanan / Item</th>
+                            <th class="text-center" style="width: 10%;">Qty</th>
+                            <th class="text-right" style="width: 20%;">Harga Satuan</th>
+                            <th class="text-right" style="width: 20%;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preview-table-body">
+                        <!-- Diisi otomatis oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bottom Section (Summary + Footer) -->
+            <div>
+                <div class="invoice-summary-container">
+                    <!-- Instruksi Pembayaran & QRIS Wrapper -->
+                    <div class="payment-info-wrapper">
+                        <div class="payment-text">
+                            <h4>Petunjuk Pembayaran: (barcode QRIS tersedia)</h4>
+                            <p class="val-payment-info" style="white-space: pre-line;">Transfer Bank:
+Bank BCA - No Rek: 4220380829
+a.n Carla Elannestya Purwanto</p>
+                        </div>
+                        <!-- Preview Box QRIS -->
+                        <div class="qris-preview-box" id="qris-box">
+                            <img src="" class="qris-img" id="val-qris" alt="QRIS">
+                        </div>
+                    </div>
+
+                    <table class="summary-table">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td class="text-right" id="val-subtotal">Rp 0,-</td>
+                        </tr>
+                        <tr>
+                            <td>PPN (<span id="val-tax-rate">0</span>%)</td>
+                            <td class="text-right" id="val-tax-amount">Rp 0,-</td>
+                        </tr>
+                        <tr class="grand-total">
+                            <td>Total Akhir</td>
+                            <td class="text-right" id="val-grand-total">Rp 0,-</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Footer Signatures -->
+                <div class="invoice-footer">
+                    <div class="thanks-message">
+                        Terima kasih atas kerja sama dan kepercayaan Anda.
+                    </div>
+                    <div class="sign-area">
+                        <div class="sign-title">Hormat Kami,</div>
+                        <div class="sign-name val-sign-name">Carla Elannestya P.</div>
+                        <p style="font-size: 0.75rem; color: #666; margin-top: 4px;" class="val-sign-role">Finance Director</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Data Dummy Awal untuk Tabel Item
+        let items = [
+            { description: 'Setup Server Cloud Enterprise (AWS)', qty: 1, price: 3500000 },
+            { description: 'Pengembangan Custom Web Dashboard - Admin Panel', qty: 1, price: 4950000 }
+        ];
+
+        // Format Rupiah
+        function formatRupiah(angka) {
+            var number_string = angka.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+            if (ribuan) {
+                var separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+            return 'Rp ' + rupiah + ',-';
+        }
+
+        function formatTanggalIndonesia(dateString) {
+            if(!dateString) return "";
+            const bulanIndo = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const dateObj = new Date(dateString);
+            const hari = dateObj.getDate();
+            const bulan = bulanIndo[dateObj.getMonth()];
+            const tahun = dateObj.getFullYear();
+            return `${hari} ${bulan} ${tahun}`;
+        }
+
+        // Render input dinamis di Sidebar & sekaligus update Preview Table
+        function renderItems() {
+            const container = document.getElementById('sidebar-items-container');
+            const previewTbody = document.getElementById('preview-table-body');
+            
+            container.innerHTML = '';
+            previewTbody.innerHTML = '';
+
+            let subtotal = 0;
+
+            items.forEach((item, index) => {
+                // 1. Tambah Input di Sidebar
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'item-entry';
+                itemDiv.innerHTML = `
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>Deskripsi Item #${index + 1}</label>
+                        <input type="text" value="${item.description}" oninput="updateItemData(${index}, 'description', this.value)">
+                    </div>
+                    <div class="form-row" style="margin-bottom:0;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Qty</label>
+                            <input type="number" value="${item.qty}" oninput="updateItemData(${index}, 'qty', this.value)">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Harga Satuan</label>
+                            <input type="number" value="${item.price}" oninput="updateItemData(${index}, 'price', this.value)">
+                        </div>
+                    </div>
+                    ${items.length > 1 ? `<button class="btn-danger" onclick="removeItemRow(${index})">Hapus Item</button>` : ''}
+                `;
+                container.appendChild(itemDiv);
+
+                // 2. Tambah Row di Live Preview Table
+                const itemTotal = item.qty * item.price;
+                subtotal += itemTotal;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.description || '<i>Belum diisi</i>'}</td>
+                    <td class="text-center">${item.qty}</td>
+                    <td class="text-right">${formatRupiah(item.price)}</td>
+                    <td class="text-right">${formatRupiah(itemTotal)}</td>
+                `;
+                previewTbody.appendChild(tr);
+            });
+
+            // 3. Kalkulasi Pajak dan Total Akhir
+            const taxRate = parseFloat(document.getElementById('input-tax-rate').value) || 0;
+            const taxAmount = (subtotal * taxRate) / 100;
+            const grandTotal = subtotal + taxAmount;
+
+            // 4. Update Summary Preview
+            document.getElementById('val-subtotal').textContent = formatRupiah(subtotal);
+            document.getElementById('val-tax-rate').textContent = taxRate;
+            document.getElementById('val-tax-amount').textContent = formatRupiah(taxAmount);
+            document.getElementById('val-grand-total').textContent = formatRupiah(grandTotal);
+        }
+
+        // Fungsi manipulasi array item
+        function addNewItemRow() {
+            items.push({ description: '', qty: 1, price: 0 });
+            renderItems();
+        }
+
+        function removeItemRow(index) {
+            items.splice(index, 1);
+            renderItems();
+        }
+
+        function updateItemData(index, field, value) {
+            if (field === 'qty' || field === 'price') {
+                items[index][field] = parseFloat(value) || 0;
+            } else {
+                items[index][field] = value;
+            }
+            renderItems();
+        }
+
+        // DOM Inputs
+        const inputLogo = document.getElementById('input-logo');
+        const inputQris = document.getElementById('input-qris');
+        const inputCompName = document.getElementById('input-comp-name');
+        const inputCompAddress = document.getElementById('input-comp-address');
+        const inputCompContact = document.getElementById('input-comp-contact');
+        const inputInvNo = document.getElementById('input-inv-no');
+        const inputInvDate = document.getElementById('input-inv-date');
+        const inputInvDue = document.getElementById('input-inv-due');
+        const inputClientName = document.getElementById('input-client-name');
+        const inputClientAddress = document.getElementById('input-client-address');
+        const inputTaxRate = document.getElementById('input-tax-rate');
+        const inputPaymentInfo = document.getElementById('input-payment-info');
+        const inputSignName = document.getElementById('input-sign-name');
+        const inputSignRole = document.getElementById('input-sign-role');
+
+        // Event Upload Logo
+        inputLogo.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.querySelector('.val-logo').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Event Upload QRIS
+        inputQris.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const qrisBox = document.getElementById('qris-box');
+            const qrisImg = document.getElementById('val-qris');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    qrisImg.src = event.target.result;
+                    qrisBox.style.display = 'flex'; // Munculkan box QRIS
+                };
+                reader.readAsDataURL(file);
+            } else {
+                qrisImg.src = '';
+                qrisBox.style.display = 'none'; // Sembunyikan jika dibatalkan/dihapus
+            }
+        });
+
+        // Event Listener untuk Update Text Preview secara Realtime
+        function updateTextPreview() {
+            document.querySelector('.val-comp-name').textContent = inputCompName.value;
+            document.querySelector('.val-comp-address').textContent = inputCompAddress.value;
+            document.querySelector('.val-comp-contact').textContent = inputCompContact.value;
+            document.querySelector('.val-inv-no').textContent = inputInvNo.value;
+            
+            document.querySelector('.val-inv-date').textContent = formatTanggalIndonesia(inputInvDate.value);
+            document.querySelector('.val-inv-due').textContent = formatTanggalIndonesia(inputInvDue.value);
+            
+            document.querySelector('.val-client-name').textContent = inputClientName.value;
+            document.querySelector('.val-client-address').textContent = inputClientAddress.value;
+            document.querySelector('.val-payment-info').textContent = inputPaymentInfo.value;
+            
+            document.querySelector('.val-sign-name').textContent = inputSignName.value;
+            document.querySelector('.val-sign-role').textContent = inputSignRole.value;
+
+            // Hitung ulang summary (jika nilai pajak berubah)
+            renderItems();
+        }
+
+        // Attach text change listeners
+        const textInputs = [
+            inputCompName, inputCompAddress, inputCompContact, inputInvNo,
+            inputInvDate, inputInvDue, inputClientName, inputClientAddress,
+            inputTaxRate, inputPaymentInfo, inputSignName, inputSignRole
+        ];
+
+        textInputs.forEach(input => {
+            input.addEventListener('input', updateTextPreview);
+        });
+
+        // Initial Load
+        updateTextPreview();
+    </script>
+</body>
+</html>

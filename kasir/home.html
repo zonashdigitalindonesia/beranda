@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f9f9f9; }
+        .box { text-align: center; padding: 30px; background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #clock { font-size: 2rem; color: #2980b9; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Selamat Datang di Sistem Zonash</h1>
+        <div id="clock">00:00:00</div>
+        <p>Gunakan navigasi di samping untuk akses cepat.</p>
+    </div>
+    <script>
+        function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
+        setInterval(updateClock, 1000); updateClock();
+    </script>
+</body>
+</html>

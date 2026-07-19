@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Order - Zonash Digital</title>
+    <style>
+        :root { --primary-color: #2c3e50; --secondary-color: #2980b9; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f4f7f6; }
+        .sidebar { width: 350px; position: fixed; left: 20px; top: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
+        .page { width: 210mm; background: white; margin-left: 400px; padding: 15mm; min-height: 297mm; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        
+        .item-row { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background: #fff; font-size: 0.9rem; }
+        .design-box { border: 2px dashed #ccc; padding: 15px; margin-top: 10px; background: #fafafa; text-align: center; }
+        .wrapper-img { position: relative; display: inline-block; margin-top: 10px; }
+        .display-banner { max-width: 100%; max-height: 150px; display: block; border: 1px solid #bbb; }
+        .dot { position: absolute; width: 10px; height: 10px; background: #fff; border: 2px solid #666; border-radius: 50%; z-index: 10; }
+        
+        button { cursor: pointer; padding: 6px; border: none; border-radius: 4px; margin-top: 5px; }
+        .btn-update { background: #2980b9; color: white; width: 100%; }
+        .btn-add { background: #27ae60; color: white; width: 100%; font-weight: bold; }
+        .btn-del { background: #e74c3c; color: white; width: 100%; }
+        
+        .header-info { margin: 20px 0; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        @media print { .sidebar { display: none; } .page { margin-left: 0; box-shadow: none; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h3>Data SO</h3>
+    <!-- Tambahkan oninput/onchange untuk update langsung -->
+    <input type="text" placeholder="No SO" id="in-so" style="width:95%" oninput="updateHeader()">
+    <input type="date" id="in-date" style="width:95%; margin-top:5px;" onchange="updateHeader()">
+    <input type="text" placeholder="Dipesan oleh" id="in-client" style="width:95%; margin-top:5px;" oninput="updateHeader()">
+    
+    <hr>
+    <h3>Daftar Banner</h3>
+    <div id="container-items"></div>
+    <button class="btn-add" onclick="addItem()">+ Tambah Banner</button>
+    <button style="width:100%; margin-top:10px; padding:10px; background:#34495e; color:white;" onclick="window.print()">🖨️ Cetak SO</button>
+</div>
+
+<div class="page" id="print-area">
+    <h1>SALES ORDER</h1>
+    <div class="header-info">
+        <b>No SO:</b> <span id="out-so">-</span> | 
+        <b>Tanggal:</b> <span id="out-date">-</span> | 
+        <b>Dipesan oleh:</b> <span id="out-client">-</span>
+    </div>
+    <div id="result-items"></div>
+</div>
+
+<script>
+    let itemCount = 0;
+
+    // Fungsi khusus untuk mengupdate header secara real-time
+    function updateHeader() {
+        document.getElementById('out-so').innerText = document.getElementById('in-so').value || '-';
+        document.getElementById('out-date').innerText = document.getElementById('in-date').value || '-';
+        document.getElementById('out-client').innerText = document.getElementById('in-client').value || '-';
+    }
+
+    function addItem() {
+        itemCount++;
+        const id = itemCount;
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.id = 'row-' + id;
+        div.innerHTML = `
+            <input type="text" placeholder="Ukuran Banner" id="size-${id}" style="width:95%">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:5px 0;">
+                <input type="number" placeholder="Atas" id="top-${id}">
+                <input type="number" placeholder="Bawah" id="bottom-${id}">
+                <input type="number" placeholder="Kiri" id="left-${id}">
+                <input type="number" placeholder="Kanan" id="right-${id}">
+            </div>
+            <input type="file" onchange="previewImg(this, ${id})">
+            <button class="btn-update" onclick="renderHoles(${id})">Update Preview Banner</button>
+            <button class="btn-del" onclick="removeRow(${id})">Hapus</button>
+        `;
+        document.getElementById('container-items').appendChild(div);
+        
+        const res = document.createElement('div');
+        res.id = 'res-' + id;
+        res.innerHTML = `
+            <div class="design-box">
+                <b>Ukuran: <span id="out-size-${id}">-</span></b><br>
+                <div class="wrapper-img"><img class="display-banner" id="img-${id}"><div id="holes-${id}"></div></div>
+            </div>`;
+        document.getElementById('result-items').appendChild(res);
+    }
+
+    function removeRow(id) {
+        document.getElementById('row-' + id).remove();
+        document.getElementById('res-' + id).remove();
+    }
+
+    function previewImg(input, id) {
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('img-'+id).src = e.target.result; renderHoles(id); }
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function renderHoles(id) {
+        document.getElementById('out-size-'+id).innerText = document.getElementById('size-'+id).value || '-';
+        
+        const container = document.getElementById('holes-'+id);
+        container.innerHTML = '';
+        const offset = 4;
+        const sides = ['top', 'bottom', 'left', 'right'];
+        
+        sides.forEach(s => {
+            const count = parseInt(document.getElementById(s+'-'+id).value) || 0;
+            for(let i=0; i<count; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                let p = (s === 'left' || s === 'right') ? (20 + (i * (60 / (count - 1)))) : (i * (100 / (count - 1)));
+                if(count === 1) p = 50;
+                
+                if(s === 'top') { dot.style.top = offset + 'px'; dot.style.left = p + '%'; dot.style.transform = 'translateX(-50%)'; }
+                if(s === 'bottom') { dot.style.bottom = offset + 'px'; dot.style.left = p + '%'; dot.style.transform = 'translateX(-50%)'; }
+                if(s === 'left') { dot.style.left = offset + 'px'; dot.style.top = p + '%'; dot.style.transform = 'translateY(-50%)'; }
+                if(s === 'right') { dot.style.right = offset + 'px'; dot.style.top = p + '%'; dot.style.transform = 'translateY(-50%)'; }
+                container.appendChild(dot);
+            }
+        });
+    }
+</script>
+</body>
+</html>
